@@ -6,12 +6,12 @@
 
 使用mixin给全局的vue添加$store，注意不同于router，install方法不在Store上
 
-``` js
-classStore {
+```js
+class Store {
     constructor(options = {}) {}
 }
 
-functioninstall(_vue) {
+function install(_vue) {
     Vue = _vue
     Vue.mixin({
         beforeCreate() {
@@ -22,7 +22,7 @@ functioninstall(_vue) {
     })
 }
 
-exportdefault {
+export default {
     Store,
     install
 };
@@ -32,8 +32,8 @@ exportdefault {
 
 出于响应式，将State放在一个Vue实例的data中，并通过get与set方式处理
 
-``` js
-classStore {
+```js
+class Store {
     constructor(options = {}) {
         this._vm = newVue({
             data: {
@@ -41,10 +41,10 @@ classStore {
             }
         });
     }
-    setstate(v) {
+    set state(v) {
         console.log('禁止直接修改state');
     }
-    getstate() {
+    get state() {
         returnthis._vm._data.$$state;
     }
 }
@@ -56,8 +56,8 @@ Mutations可以直接修改State，Actions则是通过Mutations间接控制
 
 保存传入的配置
 
-``` js
-classStore {
+```js
+class Store {
     constructor(options = {}) {
         //保存用户配置的mutations选项
         this._mutations = options.mutations || {}
@@ -71,8 +71,8 @@ classStore {
 
 commit通过传入的key获取options.mutations中的方法entry，传入state并调用方法，dispatch则是将this（store类）作为参数传入
 
-``` js
-classStore {
+```js
+class Store {
     constructor(options = {}) {
         conststore = this
         //...
@@ -80,7 +80,7 @@ classStore {
     commit(method, payload) {
         //this._mutations[method].apply(this,[this.state,payload])
         //获取type对应的mutation
-        constentry = this._mutations[method]
+        const entry = this._mutations[method]
         if (!entry) {
             console.error(`unknownmutationtype:${method}`);
             return
@@ -89,13 +89,13 @@ classStore {
     }
     dispatch(type, payload) {
         //获取用户编写的type对应的action
-        constentry = this._actions[type]
+        const entry = this._actions[type]
         if (!entry) {
             console.error(`unknownactiontype:${type}`);
             return
         }
         //异步结果处理常常需要返回Promise
-        returnentry(this, payload);
+        return entry(this, payload);
     }
 
 }
@@ -103,22 +103,22 @@ classStore {
 
 注意commit和dispatch的数据绑定，必须在Store下执行
 
-``` js
+```js
 letVue;
 
-classStore {
+class Store {
     constructor(options = {}) {
         //...
-        conststore = this
+        const store = this
         const {
             commit,
             dispatch
         } = store
-        this.commit = functionboundCommit(type, payload) {
+        this.commit = function boundCommit(type, payload) {
             commit.call(store, type, payload)
         }
-        this.dispatch = functionboundAction(type, payload) {
-            returndispatch.call(store, type, payload)
+        this.dispatch = function boundAction(type, payload) {
+            return dispatch.call(store, type, payload)
         }
     }
     //...
@@ -133,7 +133,7 @@ getters类似与state，使用到了vue实例中的computed
 
 创建一个getters，并将computed赋值到vue实例中
 
-``` js
+```js
 let Vue;
 
 class Store {
