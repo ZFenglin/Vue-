@@ -17,7 +17,7 @@
 
 ### 通用方法
 
-``` js
+```js
 // 全局通用方法
 // 定义响应数据
 function defineReactive(obj, key, val) {
@@ -51,7 +51,7 @@ function observe(obj) {
 
 ### MVVM
 
-``` js
+```js
 /// MVVM
 class MVVM {
     constructor(options) {
@@ -84,7 +84,7 @@ class MVVM {
 
 ### Observer
 
-``` js
+```js
 /// Observer
 class Observer {
     constructor(value) {
@@ -103,11 +103,13 @@ class Observer {
 
 ## Complier编译器处理
 
- ![编译器流程](./assets/编译器流程.jpg)
+ 
+
+![编译器流程](./assets/编译器流程.jpg)
 
 ### 基本流程
 
-``` js
+```js
 // Compiler
 class Compiler {
     constructor(el, vm) {
@@ -156,7 +158,7 @@ class Compiler {
 
 ### 元素编译
 
-``` js
+```js
 /// 编译处理
 // 元素编译
 compileElement(node) {
@@ -209,7 +211,7 @@ eventHandler(node, exp, dir) {
 
 ### 插值编译
 
-``` js
+```js
 /// 编译处理
 // 插值编译
 compileText(node) {
@@ -238,7 +240,7 @@ Watcher来维护它们, 此过程称为依赖收集。
 
 保存更新函数，值发生变化调用更新函数
 
-``` js
+```js
 /// Wacther
 class Watcher {
     constructor(vm, key, updateFn) {
@@ -263,7 +265,7 @@ class Watcher {
 
 依赖，管理某个key相关所有Watcher实例
 
-``` js
+```js
 /// Dep
 class Dep {
     constructor() {
@@ -284,11 +286,9 @@ class Dep {
 
 defineReactive时为每一个key创建一个Dep实例，并在get与set上添加watcher和触发更新
 
-``` js
+```js
 // 定义响应数据
 function defineReactive(obj, key, val) {
-    observe(val)
-
     // 按照key创建Dep
     const dep = new Dep()
 
@@ -315,7 +315,7 @@ function defineReactive(obj, key, val) {
 
 Compiler增加update函数用于初始化编译的统一入口，并在首次编译时创建元素对应的Watcher
 
-``` js
+```js
    /// 编译处理
    // 元素编译
    compileElement(node) {
